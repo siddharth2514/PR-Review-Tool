@@ -1,0 +1,47 @@
+/* Futuristic loader animation */
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+}
+.loader-cpu {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 6px solid #43cea2;
+    border-top: 6px solid #185a9d;
+    animation: spin 1.2s linear infinite;
+    margin-bottom: 1.5em;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.loader-text {
+    font-size: 1.3em;
+    color: #43cea2;
+    letter-spacing: 1px;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+.loader-steps {
+    color: #b2fefa;
+    font-size: 1.1em;
+    margin-bottom: 0.5em;
+}
+.loader-progress {
+    width: 320px;
+    height: 10px;
+    background: #232526;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+.loader-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+    border-radius: 8px;
+    transition: width 0.3s;
+}

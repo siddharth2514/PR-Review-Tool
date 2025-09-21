@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PR Review Agent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/loader.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(30,34,40,0.85);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+            border-radius: 1.5rem;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+        }
+        .neon {
+            text-shadow: 0 0 8px #43cea2, 0 0 16px #185a9d;
+        }
+        .provider-btn {
+            transition: transform 0.18s, box-shadow 0.18s;
+        }
+        .provider-btn:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 4px 24px 0 #43cea2aa;
+        }
+        .animate-fadein {
+            animation: fadein 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body class="text-white">
+    <div class="flex flex-col items-center justify-center min-h-screen animate-fadein">
+        <h1 class="text-5xl md:text-6xl font-extrabold mb-2 neon tracking-wide text-center">AI PR Review Agent</h1>
+        <p class="text-xl md:text-2xl mb-8 text-cyan-200 text-center">Futuristic AI-powered code review for GitHub, GitLab, Bitbucket & more</p>
+        <div class="glass p-8 w-full max-w-lg flex flex-col items-center">
+            <form method="post" id="analyzeForm" class="w-full">
+                <label for="pr_url" class="block text-lg font-semibold mb-2">Pull Request URL or Repo Link</label>
+                <div class="flex items-center mb-4">
+                    <span class="bg-gray-800 rounded-l-lg px-4 py-3 flex items-center border border-r-0 border-gray-700">
+                        <svg width="28" height="28" fill="currentColor" class="text-gray-400" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.26.82-.577 0-.285-.01-1.04-.015-2.04-3.338.726-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.73.083-.73 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.76-1.606-2.665-.304-5.466-1.332-5.466-5.93 0-1.31.468-2.38 1.236-3.22-.124-.303-.535-1.523.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.873.12 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.803 5.624-5.475 5.92.43.37.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .32.216.694.825.576C20.565 21.796 24 17.297 24 12c0-6.63-5.37-12-12-12z"/></svg>
+                    </span>
+                    <input type="url" class="flex-1 px-4 py-3 rounded-r-lg border border-gray-700 bg-gray-900 text-white focus:ring-2 focus:ring-cyan-400 outline-none text-lg" id="pr_url" name="pr_url" placeholder="https://github.com/user/repo/pull/123" required>
+                </div>
+                <div class="flex justify-between gap-2 mb-4">
+                    <button type="button" class="provider-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-black/70 border border-gray-700 hover:bg-black/90 transition" onclick="setProvider('github')">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="22"> <span class="font-semibold">GitHub</span>
+                    </button>
+                    <button type="button" class="provider-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-black/70 border border-gray-700 hover:bg-black/90 transition" onclick="setProvider('gitlab')">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gitlab/gitlab-original.svg" width="22"> <span class="font-semibold text-orange-400">GitLab</span>
+                    </button>
+                    <button type="button" class="provider-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-black/70 border border-gray-700 hover:bg-black/90 transition" onclick="setProvider('bitbucket')">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bitbucket/bitbucket-original.svg" width="22"> <span class="font-semibold text-blue-400">Bitbucket</span>
+                    </button>
+                </div>
+                <button type="submit" class="w-full py-3 mt-2 rounded-lg bg-cyan-400 hover:bg-cyan-500 text-black font-bold text-xl shadow-lg transition">Analyze</button>
+            </form>
+        </div>
+        <div id="loaderOverlay" class="loader-container" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(30,34,40,0.97);">
+            <div class="loader-cpu"></div>
+            <div class="loader-text">Analyzing Pull Request...</div>
+            <div class="loader-steps">Running AI models, fetching data, generating insights</div>
+            <div class="loader-progress"><div class="loader-bar" id="loaderBar" style="width: 0%;"></div></div>
+        </div>
+    </div>
+    <script>
+    function setProvider(provider) {
+        let input = document.getElementById('pr_url');
+        if (provider === 'github') input.value = 'https://github.com/';
+        if (provider === 'gitlab') input.value = 'https://gitlab.com/';
+        if (provider === 'bitbucket') input.value = 'https://bitbucket.org/';
+        input.focus();
+    }
+    // Loader logic
+    document.getElementById('analyzeForm').addEventListener('submit', function(e) {
+        document.getElementById('loaderOverlay').style.display = 'flex';
+        let bar = document.getElementById('loaderBar');
+        let progress = 0;
+        let interval = setInterval(() => {
+            progress += Math.random() * 18;
+            if (progress > 100) progress = 100;
+            bar.style.width = progress + '%';
+            if (progress === 100) clearInterval(interval);
+        }, 350);
+    });
+    </script>
+</body>
+</html>

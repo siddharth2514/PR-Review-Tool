@@ -1,0 +1,93 @@
+body {
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    min-height: 100vh;
+    color: #f8f9fa;
+    font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+.container {
+    max-width: 900px;
+}
+
+.card {
+    border-radius: 1.2rem;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+    border: none;
+    background: rgba(40,44,52,0.98);
+}
+
+.card-title, h1, h5, h4 {
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.badge {
+    font-size: 1rem;
+    padding: 0.5em 1em;
+    border-radius: 0.7em;
+}
+
+.progress {
+    background: #232526;
+    border-radius: 1em;
+    height: 1.2em;
+}
+
+.progress-bar {
+    font-weight: 600;
+    font-size: 1em;
+    border-radius: 1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.list-group-item {
+    font-size: 1.08em;
+    border: none;
+    margin-bottom: 0.3em;
+    border-radius: 0.7em !important;
+    padding: 0.8em 1.2em;
+}
+
+.list-group-item-danger {
+    background: linear-gradient(90deg, #ff5858 0%, #f09819 100%);
+    color: #fff;
+}
+
+.list-group-item-warning {
+    background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
+    color: #232526;
+}
+
+.list-group-item-success {
+    background: linear-gradient(90deg, #43cea2 0%, #185a9d 100%);
+    color: #fff;
+}
+
+.btn-outline-light, .btn-outline-secondary {
+    border-radius: 2em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+input[type="text"], input[type="url"] {
+    border-radius: 2em !important;
+    padding: 0.7em 1.2em !important;
+    font-size: 1.1em !important;
+    background: #232526 !important;
+    color: #f8f9fa !important;
+    border: 1.5px solid #444 !important;
+}
+
+input[type="text"]:focus, input[type="url"]:focus {
+    border-color: #43cea2 !important;
+    box-shadow: 0 0 0 0.2rem rgba(67,206,162,0.25) !important;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: #232526;
+}
+::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 8px;
+}

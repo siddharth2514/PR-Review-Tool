@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PR Analysis Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            min-height: 100vh;
+        }
+        .glass {
+            background: rgba(255,255,255,0.85);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.12);
+            border-radius: 1.5rem;
+            border: 1.5px solid rgba(67,206,162,0.10);
+            backdrop-filter: blur(8px);
+        }
+        .neon {
+            text-shadow: 0 0 8px #43cea2, 0 0 16px #185a9d;
+        }
+        .animate-fadein {
+            animation: fadein 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: none; }
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+    <div class="flex flex-col items-center justify-center min-h-screen animate-fadein">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-2 neon tracking-wide text-center">PR Analysis Report</h1>
+        <div class="glass p-8 w-full max-w-3xl flex flex-col items-center mt-4">
+        <div class="d-flex align-items-center mb-4">
+            <svg width="40" height="40" fill="currentColor" class="me-3 text-primary" viewBox="0 0 16 16"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.93 6.588-4.29 4.29a.75.75 0 0 1-1.06 0l-2.29-2.29a.75.75 0 1 1 1.06-1.06l1.76 1.76 3.76-3.76a.75.75 0 1 1 1.06 1.06z"/></svg>
+            <h1 class="mb-0 fw-bold" style="letter-spacing:1px;">PR Analysis Report</h1>
+        </div>
+        <div class="w-full mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <div>
+                    <span class="text-cyan-600 font-semibold">PR URL:</span>
+                    <span class="text-gray-700 text-sm">{{ pr_url }}</span>
+                </div>
+                {% if report %}
+                <div class="flex gap-2 mt-2 md:mt-0">
+                    <span class="bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full px-4 py-1 text-sm font-semibold">Author: {{ report.author }}</span>
+                    <span class="bg-gradient-to-r from-gray-400 to-gray-700 text-white rounded-full px-4 py-1 text-sm font-semibold">Repo: {{ report.repo }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if report %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mb-6">
+            <div class="glass p-6">
+                <h2 class="text-xl font-bold mb-3 text-cyan-700">Score & Metrics</h2>
+                <div class="mb-2">Overall Quality Score:
+                    <span class="bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-full px-4 py-1 text-lg font-bold ml-2">{{ report.quality_score }}/100</span>
+                </div>
+                <div class="mb-2">PEP8
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="bg-gradient-to-r from-cyan-400 to-blue-500 h-4 rounded-full flex items-center justify-center text-xs font-bold text-white" style="width: {{ report.metrics.pep8|default(0) }}%">{{ report.metrics.pep8|default(0) }}%</div>
+                    </div>
+                </div>
+                <div class="mb-2">Complexity
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="bg-gradient-to-r from-yellow-400 to-yellow-200 h-4 rounded-full flex items-center justify-center text-xs font-bold text-gray-900" style="width: {{ report.metrics.complexity|default(0) }}%">{{ report.metrics.complexity|default(0) }}%</div>
+                    </div>
+                </div>
+                <div class="mb-2">Docstring Coverage
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div class="bg-gradient-to-r from-cyan-200 to-cyan-500 h-4 rounded-full flex items-center justify-center text-xs font-bold text-gray-900" style="width: {{ report.metrics.doc_coverage|default(0) }}%">{{ report.metrics.doc_coverage|default(0) }}%</div>
+                    </div>
+                </div>
+                <div class="mb-2">TODOs: <span class="bg-gradient-to-r from-red-400 to-orange-400 text-white rounded-full px-3 py-1 text-sm font-semibold">{{ report.metrics.todos }}</span></div>
+                <div class="mb-2">Warnings: <span class="bg-gradient-to-r from-yellow-400 to-yellow-200 text-gray-900 rounded-full px-3 py-1 text-sm font-semibold">{{ report.metrics.warnings }}</span></div>
+            </div>
+            <div class="glass p-6">
+                <h2 class="text-xl font-bold mb-3 text-cyan-700">Summary</h2>
+                <div><span class="font-semibold text-green-700">Strengths:</span>
+                    <ul class="mb-2 list-disc list-inside">
+                    {% for s in report.summary.strengths %}
+                        <li class="text-green-700">{{ s }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+                <div><span class="font-semibold text-yellow-700">Areas for Improvement:</span>
+                    <ul class="mb-0 list-disc list-inside">
+                    {% for s in report.summary.areas_for_improvement %}
+                        <li class="text-yellow-700">{{ s }}</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="glass p-6 w-full mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-3 gap-2">
+                <h2 class="text-lg font-bold mb-2 md:mb-0 text-cyan-700">AI-Powered Review Comments</h2>
+                <div class="flex gap-2">
+                    <input type="text" class="rounded-full px-4 py-2 border border-cyan-300 focus:ring-2 focus:ring-cyan-400 outline-none text-base text-gray-900 bg-white" id="filterInput" placeholder="Filter: e.g. critical, warning, best practice" oninput="filterIssues()">
+                    <button class="rounded-full px-4 py-2 bg-cyan-100 text-cyan-700 font-semibold hover:bg-cyan-200 transition" type="button" onclick="clearFilter()">Clear</button>
+                </div>
+            </div>
+            <ul id="issuesList" class="space-y-2">
+            {% for issue in report.issues %}
+                <li class="rounded-lg px-4 py-3 font-medium shadow-md transition-all duration-200 flex flex-col gap-1 relative {% if issue.type == 'critical' %}bg-gradient-to-r from-red-400 to-orange-400 text-white{% elif issue.type == 'warning' %}bg-gradient-to-r from-yellow-400 to-yellow-200 text-gray-900{% else %}bg-gradient-to-r from-green-400 to-cyan-500 text-white{% endif %}">
+                    <div class="flex items-center gap-2 mb-1">
+                        {% if issue.type == 'critical' %}
+                            <span class="inline-block bg-red-600 text-white text-xs font-bold rounded-full px-3 py-1 mr-1">Critical</span>
+                        {% elif issue.type == 'warning' %}
+                            <span class="inline-block bg-yellow-400 text-gray-900 text-xs font-bold rounded-full px-3 py-1 mr-1">Warning</span>
+                        {% else %}
+                            <span class="inline-block bg-green-500 text-white text-xs font-bold rounded-full px-3 py-1 mr-1">Best Practice</span>
+                        {% endif %}
+                        <span class="text-xs opacity-80">
+                            {% if issue.file %}
+                                <span class="font-mono">{{ issue.file }}{% if issue.line %}:{{ issue.line }}{% endif %}</span>
+                                {% if issue.pr_link %}
+                                    <a href="{{ issue.pr_link }}" target="_blank" class="underline text-xs ml-1">View in PR</a>
+                                {% endif %}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div>{{ issue.text }}</div>
+                    {% if issue.suggestion %}
+                        <div class="mt-2 p-3 rounded-lg bg-white/80 text-gray-900 text-sm border-l-4 border-cyan-400">
+                            <span class="font-semibold text-cyan-700">AI Suggestion:</span> {{ issue.suggestion }}
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="flex gap-4 mb-6">
+            <button class="rounded-full px-6 py-2 bg-cyan-400 hover:bg-cyan-500 text-black font-bold shadow transition" onclick="copyReportMarkdown()">Copy as Markdown</button>
+            <form method="post" action="/download_pdf" style="display:inline;">
+                <input type="hidden" name="pr_url" value="{{ pr_url }}">
+                <button class="rounded-full px-6 py-2 bg-cyan-400 hover:bg-cyan-500 text-black font-bold shadow transition" type="submit">Download PDF</button>
+            </form>
+        </div>
+        <script>
+        function filterIssues() {
+            const input = document.getElementById('filterInput').value.toLowerCase();
+            const items = document.querySelectorAll('#issuesList li');
+            items.forEach(item => {
+                if (!input) { item.style.display = ''; return; }
+                const text = item.textContent.toLowerCase();
+                // Type badge detection
+                const isCritical = item.querySelector('.bg-red-600');
+                const isWarning = item.querySelector('.bg-yellow-400');
+                const isBest = item.querySelector('.bg-green-500');
+                let show = false;
+                if (input.includes('critical') && isCritical) show = true;
+                if (input.includes('warning') && isWarning) show = true;
+                if ((input.includes('best') || input.includes('practice')) && isBest) show = true;
+                if (text.includes(input)) show = true;
+                item.style.display = show ? '' : 'none';
+            });
+        }
+        function clearFilter() {
+            document.getElementById('filterInput').value = '';
+            filterIssues();
+        }
+        function copyReportMarkdown() {
+            const text = '' + {{ report.markdown|tojson|safe }};
+            navigator.clipboard.writeText(text);
+            alert('Report copied as Markdown!');
+        }
+        </script>
+        {% else %}
+        <div class="alert alert-info">Analysis logic not implemented yet.</div>
+        {% endif %}
+    <a href="/" class="rounded-full px-6 py-2 bg-gray-200 hover:bg-cyan-200 text-cyan-700 font-bold shadow transition">Back</a>
+    </div>
+</div>
+</body>
+</html>
