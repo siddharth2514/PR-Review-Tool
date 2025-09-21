@@ -1,0 +1,11 @@
+Flask
+Jinja2
+python-dotenv
+PyGithub
+openai
+reportlab
+pylint
+bandit
+radon
+pycodestyle
+gunicorn
